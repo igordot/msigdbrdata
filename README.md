@@ -6,4 +6,5 @@
 [![Codecov test coverage](https://codecov.io/gh/igordot/msigdbdf/graph/badge.svg)](https://app.codecov.io/gh/igordot/msigdbdf)
 <!-- badges: end -->
 
-Helper package for generating data for [msigdbr](https://doi.org/10.32614/CRAN.package.msigdbr).
+Functions for preparing data for [msigdbr](https://doi.org/10.32614/CRAN.package.msigdbr).
+Organized as a package for automated testing of the code and the actual data.
