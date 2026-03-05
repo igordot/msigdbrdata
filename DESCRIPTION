@@ -1,7 +1,7 @@
 Type: Package
-Package: msigdbdf
+Package: msigdbrdata
 Title: MSigDB Data Frame
-Version: 25.1.0
+Version: 25.1.0.9000
 Authors@R: 
     person("Igor", "Dolgalev", , "igor.dolgalev@nyumc.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4451-126X"))
@@ -12,8 +12,8 @@ Description: Provides the Molecular Signatures Database (MSigDB) gene sets
     data source for 'msigdbr' <doi:10.32614/CRAN.package.msigdbr> (split
     into a separate package due to CRAN size restrictions).
 License: MIT + file LICENSE
-URL: https://github.com/igordot/msigdbdf
-BugReports: https://github.com/igordot/msigdbdf/issues
+URL: https://github.com/igordot/msigdbrdata
+BugReports: https://github.com/igordot/msigdbrdata/issues
 Depends:
     R (>= 4.1)
 Imports:
@@ -35,4 +35,4 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

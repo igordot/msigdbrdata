@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(msigdbdf)
+library(msigdbrdata)
 
-test_check("msigdbdf")
+test_check("msigdbrdata")

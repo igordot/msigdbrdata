@@ -1,5 +1,5 @@
-test_that("msigdbdf() human", {
-  mdb <- msigdbdf(target_species = "HS")
+test_that("msigdbrdata() human", {
+  mdb <- msigdbrdata(target_species = "HS")
   expect_s3_class(mdb, "data.frame")
   expect_gt(nrow(mdb), 4400000)
   expect_lt(nrow(mdb), 4600000)
@@ -72,8 +72,8 @@ test_that("msigdbdf() human", {
   expect_identical(filter(mdb, db_gene_symbol == "SRSF1"), filter(mdb, db_ensembl_gene == "ENSG00000136450"))
 })
 
-test_that("msigdbdf() mouse", {
-  mdb <- msigdbdf(target_species = "MM")
+test_that("msigdbrdata() mouse", {
+  mdb <- msigdbrdata(target_species = "MM")
   expect_s3_class(mdb, "data.frame")
   expect_gt(nrow(mdb), 1600000)
   expect_lt(nrow(mdb), 1800000)
@@ -125,10 +125,10 @@ test_that("msigdbdf() mouse", {
   expect_identical(filter(mdb, db_gene_symbol == "Srsf1"), filter(mdb, db_ensembl_gene == "ENSMUSG00000018379"))
 })
 
-test_that("msigdbdf() target_species variants", {
-  expect_identical(msigdbdf(target_species = "HS"), msigdbdf(target_species = "Hs"))
-  expect_identical(msigdbdf(target_species = "MM"), msigdbdf(target_species = "Mm"))
-  expect_error(msigdbdf(target_species = "ZZ"))
-  expect_error(msigdbdf(target_species = ""))
-  expect_error(msigdbdf(target_species = NA))
+test_that("msigdbrdata() target_species variants", {
+  expect_identical(msigdbrdata(target_species = "HS"), msigdbrdata(target_species = "Hs"))
+  expect_identical(msigdbrdata(target_species = "MM"), msigdbrdata(target_species = "Mm"))
+  expect_error(msigdbrdata(target_species = "ZZ"))
+  expect_error(msigdbrdata(target_species = ""))
+  expect_error(msigdbrdata(target_species = NA))
 })

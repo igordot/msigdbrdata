@@ -19,7 +19,7 @@
 #' @importFrom dplyr arrange inner_join
 #'
 #' @export
-msigdbdf <- function(target_species = c("HS", "MM")) {
+msigdbrdata <- function(target_species = c("HS", "MM")) {
   target_species <- toupper(target_species)
   target_species <- match.arg(target_species)
 

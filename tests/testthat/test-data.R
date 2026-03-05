@@ -1,5 +1,5 @@
 # Basic tests to check integrity of the internal data
-# More in-depth checks are part of the msigdbdf() testing
+# More in-depth checks are part of the msigdbrdata() testing
 
 test_that("gene_set_details", {
   expect_identical(names(gene_set_details_hs), names(gene_set_details_mm))
