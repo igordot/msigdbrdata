@@ -1,5 +1,5 @@
-# Both the data and the code to generate the data are included in the msigdbdf package
-# All functions except msigdbdf() are internal and are not meant to be public-facing
+# Both the data and the code to generate the data are included in the msigdbrdata package
+# All functions except msigdbrdata() are internal and are not meant to be public-facing
 
 # Set the MSigDB database version -----
 
@@ -15,25 +15,25 @@ library(stringr)
 # Each database file holds one MSigDB release for one resource (human or mouse)
 
 # Retrieve the human database
-mdb_hs <- msigdbdf:::msigdb_sqlite(str_glue("{msigdb_version}.Hs"))
+mdb_hs <- msigdbrdata:::msigdb_sqlite(str_glue("{msigdb_version}.Hs"))
 str(mdb_hs)
 
 if (length(mdb_hs) < 9) stop()
 
 # Retrieve the mouse database
-mdb_mm <- msigdbdf:::msigdb_sqlite(str_glue("{msigdb_version}.Mm"))
+mdb_mm <- msigdbrdata:::msigdb_sqlite(str_glue("{msigdb_version}.Mm"))
 str(mdb_mm)
 
 if (length(mdb_mm) < 9) stop()
 
 # Generate gene_set_details -----
 
-gene_set_details_hs <- msigdbdf:::gene_set_details(mdb_hs)
+gene_set_details_hs <- msigdbrdata:::gene_set_details(mdb_hs)
 str(gene_set_details_hs)
 
 if (n_distinct(gene_set_details_hs$gs_id) < 30000) stop()
 
-gene_set_details_mm <- msigdbdf:::gene_set_details(mdb_mm)
+gene_set_details_mm <- msigdbrdata:::gene_set_details(mdb_mm)
 str(gene_set_details_mm)
 
 if (n_distinct(gene_set_details_mm$gs_id) < 10000) stop()
@@ -48,12 +48,12 @@ table(gene_set_details_mm$gs_subcollection, gene_set_details_mm$gs_collection, u
 
 # Generate gene_set_members -----
 
-gene_set_members_hs <- msigdbdf:::gene_set_members(mdb_hs)
+gene_set_members_hs <- msigdbrdata:::gene_set_members(mdb_hs)
 str(gene_set_members_hs)
 
 if (n_distinct(gene_set_members_hs$db_gene_symbol) < 40000) stop()
 
-gene_set_members_mm <- msigdbdf:::gene_set_members(mdb_mm)
+gene_set_members_mm <- msigdbrdata:::gene_set_members(mdb_mm)
 str(gene_set_members_mm)
 
 if (n_distinct(gene_set_members_mm$db_gene_symbol) < 40000) stop()
