@@ -1,3 +1,7 @@
+# msigdbrdata 25.1.1
+
+* Changed package name.
+
 # msigdbdf 25.1.0
 
 * Based on MSigDB v2025.1.Hs and v2025.1.Mm.
