@@ -37,7 +37,7 @@ msigdb_sqlite <- function(x) {
   on.exit(options(old_options))
 
   # Download the MSigDB SQLite file
-  download.file(url = mdb_zip_url, destfile = temp_mdb_zip)
+  download.file(url = mdb_zip_url, destfile = temp_mdb_zip, quiet = TRUE)
   unzip(temp_mdb_zip, exdir = tempdir())
 
   # Open database connection to SQLite file and extract tables as tibbles
@@ -59,9 +59,9 @@ msigdb_sqlite <- function(x) {
   db_list$gene_set <- tibble::as_tibble(dplyr::tbl(db, "gene_set"))
   db_list$gene_set <- dplyr::select(
     db_list$gene_set,
-    .data$id,
-    .data$standard_name,
-    .data$collection_name
+    "id",
+    "standard_name",
+    "collection_name"
   )
 
   # Check that the gene_set table has a reasonable number of rows
@@ -79,15 +79,15 @@ msigdb_sqlite <- function(x) {
   db_list$gene_set_details <- tibble::as_tibble(dplyr::tbl(db, "gene_set_details"))
   db_list$gene_set_details <- dplyr::select(
     db_list$gene_set_details,
-    .data$gene_set_id,
-    .data$description_brief,
-    .data$description_full,
-    .data$systematic_name,
-    .data$exact_source,
-    .data$external_details_URL,
-    .data$source_species_code,
-    .data$publication_id,
-    .data$GEO_id
+    "gene_set_id",
+    "description_brief",
+    "description_full",
+    "systematic_name",
+    "exact_source",
+    "external_details_URL",
+    "source_species_code",
+    "publication_id",
+    "GEO_id"
   )
 
   # Check that systematic_name is always present
@@ -101,9 +101,9 @@ msigdb_sqlite <- function(x) {
   db_list$gene_symbol <- tibble::as_tibble(dplyr::tbl(db, "gene_symbol"))
   db_list$gene_symbol <- dplyr::select(
     db_list$gene_symbol,
-    .data$id,
-    .data$symbol,
-    .data$NCBI_id
+    "id",
+    "symbol",
+    "NCBI_id"
   )
 
   # The namespace table provides the mapping info associated with each gene_symbol
@@ -124,8 +124,8 @@ msigdb_sqlite <- function(x) {
   db_list$publication <- tibble::as_tibble(dplyr::tbl(db, "publication"))
   db_list$publication <- dplyr::select(
     db_list$publication,
-    .data$id,
-    .data$PMID
+    "id",
+    "PMID"
   )
 
   # The collection table holds the information for each MSigDB Collection
@@ -133,9 +133,9 @@ msigdb_sqlite <- function(x) {
   db_list$collection <- tibble::as_tibble(dplyr::tbl(db, "collection"))
   db_list$collection <- dplyr::select(
     db_list$collection,
-    .data$collection_name,
-    .data$full_name,
-    .data$description
+    "collection_name",
+    "full_name",
+    "description"
   )
 
   # Close database connection
