@@ -3,40 +3,28 @@
 
 # Set the MSigDB database version -----
 
-msigdb_version <- "2025.1"
+msigdb_version <- "2026.1"
 
 # Load packages -----
 
 library(dplyr)
 library(stringr)
 
-# Import MSigDB gene sets -----
+# Import MSigDB gene sets (separate database files for Hs and Mm) -----
 
-# Each database file holds one MSigDB release for one resource (human or mouse)
-
-# Retrieve the human database
 mdb_hs <- msigdbrdata:::msigdb_sqlite(str_glue("{msigdb_version}.Hs"))
-str(mdb_hs)
-
 if (length(mdb_hs) < 9) stop()
 
-# Retrieve the mouse database
 mdb_mm <- msigdbrdata:::msigdb_sqlite(str_glue("{msigdb_version}.Mm"))
-str(mdb_mm)
-
 if (length(mdb_mm) < 9) stop()
 
 # Generate gene_set_details -----
 
 gene_set_details_hs <- msigdbrdata:::gene_set_details(mdb_hs)
-str(gene_set_details_hs)
-
 if (n_distinct(gene_set_details_hs$gs_id) < 30000) stop()
 
 gene_set_details_mm <- msigdbrdata:::gene_set_details(mdb_mm)
-str(gene_set_details_mm)
-
-if (n_distinct(gene_set_details_mm$gs_id) < 10000) stop()
+if (n_distinct(gene_set_details_mm$gs_id) < 15000) stop()
 
 # Check gene_set_details -----
 
@@ -49,14 +37,12 @@ table(gene_set_details_mm$gs_subcollection, gene_set_details_mm$gs_collection, u
 # Generate gene_set_members -----
 
 gene_set_members_hs <- msigdbrdata:::gene_set_members(mdb_hs)
+if (n_distinct(gene_set_members_hs$db_gene_symbol) < 40000) stop()
 str(gene_set_members_hs)
 
-if (n_distinct(gene_set_members_hs$db_gene_symbol) < 40000) stop()
-
 gene_set_members_mm <- msigdbrdata:::gene_set_members(mdb_mm)
-str(gene_set_members_mm)
-
 if (n_distinct(gene_set_members_mm$db_gene_symbol) < 40000) stop()
+str(gene_set_members_mm)
 
 # Check gene_set_members -----
 
@@ -66,13 +52,15 @@ gene_ids <- distinct(select(gene_set_members_hs, !gs_id))
 # Check human Ensembl multi-mapping genes
 gene_ids |>
   distinct(db_gene_symbol, db_ncbi_gene, db_ensembl_gene) |>
-  count(db_gene_symbol, sort = TRUE)
+  count(db_gene_symbol, sort = TRUE) |>
+  head(10)
 
 # Check human Ensembl multi-mapping genes, ignoring where the source gene is an Ensembl ID
 gene_ids |>
   filter(!str_detect(source_gene, "^ENS")) |>
   distinct(db_gene_symbol, db_ncbi_gene, db_ensembl_gene) |>
-  count(db_gene_symbol, sort = TRUE)
+  count(db_gene_symbol, sort = TRUE) |>
+  head(10)
 
 # Check some specific genes for how multi-mapping is handled
 filter(gene_ids, db_gene_symbol == "U3" | source_gene == "U3")
@@ -84,7 +72,8 @@ filter(gene_ids, db_gene_symbol == "Cxcl2" | source_gene == "Cxcl2")
 gene_set_members_mm |>
   filter(!str_detect(source_gene, "^ENS")) |>
   distinct(db_gene_symbol, db_ncbi_gene, db_ensembl_gene) |>
-  count(db_gene_symbol, sort = TRUE)
+  count(db_gene_symbol, sort = TRUE) |>
+  head(10)
 
 # Save package data -----
 

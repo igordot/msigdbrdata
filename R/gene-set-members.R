@@ -42,7 +42,6 @@ gene_set_members <- function(x) {
 
   # Add the official NCBI symbol and ID (not all source genes are mapped to a NCBI gene)
   mg <- dplyr::inner_join(mg, x$gene_symbol, by = c("gene_symbol_id" = "id"))
-  mg$NCBI_id <- mg$NCBI_id
 
   # Save the number of gene-geneset pairs with NCBI gene IDs
   num_pairs_ncbi <- nrow(mg)
@@ -62,7 +61,6 @@ gene_set_members <- function(x) {
     mg,
     "gs_id",
     source_gene = "source_id",
-    source_species = "species_code",
     db_ncbi_gene = "NCBI_id",
     db_gene_symbol = "symbol"
   )
@@ -107,13 +105,34 @@ gene_set_members <- function(x) {
     stop("Source genes are overlapping")
   }
 
-  # Add Ensembl IDs to genes without them
+  # Retrieve Ensembl mappings
   ens <- ensembl_genes(x)
+
+  # Check for genes missing from the mapping file
+  missing_ens_genes <- setdiff(mg_nonens$db_gene_symbol, ens$db_gene_symbol)
+  if (length(missing_ens_genes)) {
+    # 2026.1.Hs: LOC102724843
+    warning("Some genes are missing Ensembl mappings: ", toString(missing_ens_genes))
+    if (length(missing_ens_genes) > 3) {
+      stop("Incomplete Ensembl mappings")
+    }
+  }
+
+  # Add Ensembl IDs to genes without them
   mg_nonens <- dplyr::select(mg_nonens, !"db_ensembl_gene")
-  mg_nonens <- left_join(mg_nonens, ens, by = "db_gene_symbol", relationship = "many-to-many")
+  mg_nonens <- inner_join(mg_nonens, ens, by = "db_gene_symbol", relationship = "many-to-many")
 
   # Combine subsets with and without known Ensembl IDs
   mg <- bind_rows(mg_ens, mg_nonens)
+
+  # Check that all of the source genes remain
+  missing_src_genes <- setdiff(drop_na(x$source_member)$source_id, mg$source_gene)
+  if (length(missing_src_genes)) {
+    warning("Some source genes were lost: ", toString(missing_src_genes))
+    if (length(missing_src_genes) > length(missing_ens_genes)) {
+      stop("Source genes lost")
+    }
+  }
 
   # Clean up the final table
   mg <- dplyr::distinct(
@@ -124,19 +143,21 @@ gene_set_members <- function(x) {
     .data$source_gene,
     .data$gs_id
   )
+
+  # Sorting by db_gene_symbol, source_gene results in the best "xz" compression
   mg <- dplyr::arrange(
     mg,
     .data$db_gene_symbol,
-    .data$db_ensembl_gene,
     .data$source_gene,
+    .data$db_ensembl_gene,
+    .data$db_ncbi_gene,
     .data$gs_id
   )
-  mg <- as.data.frame(mg, stringsAsFactors = FALSE)
 
-  # Check that the table seems reasonable
-  if (length(setdiff(drop_na(x$source_member)$source_id, mg$source_gene))) {
-    stop("Some source genes are missing")
-  }
+  # Confirm that the object is a data frame
+  mg <- as.data.frame(mg)
+
+  # Check that the final table is reasonable
   if (nrow(mg) / num_pairs < 0.95) {
     stop("Too many gene-geneset pairs lost")
   }

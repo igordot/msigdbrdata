@@ -1,9 +1,12 @@
 # Basic tests to check integrity of the internal data
 # More in-depth checks are part of the msigdbrdata() testing
 
+suppressPackageStartupMessages(library(dplyr))
+
 test_that("gene_set_details", {
   expect_identical(names(gene_set_details_hs), names(gene_set_details_mm))
   expect_gt(nrow(gene_set_details_hs), nrow(gene_set_details_mm) * 1.5)
+  expect_lt(nrow(gene_set_details_hs), nrow(gene_set_details_mm) * 3)
 })
 
 test_that("gene_set_details_hs", {
