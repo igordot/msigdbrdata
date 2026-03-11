@@ -1,3 +1,8 @@
+# msigdbrdata 26.1.0
+
+* Updated to MSigDB v2026.1.Hs and v2026.1.Mm.
+* Changed data export to a `.zip` archive of per-collection `.rds` files.
+
 # msigdbrdata 25.1.1
 
 * Changed package name.
