@@ -1,4 +1,12 @@
 test_that("msigdb_sqlite()", {
   expect_error(msigdb_sqlite())
   expect_error(msigdb_sqlite("x"))
+  mdb <- msigdb_sqlite("2026.1.Mm")
+  expect_type(mdb, "list")
+  expect_s3_class(mdb$gene_set, "data.frame")
+  expect_s3_class(mdb$gene_set_details, "data.frame")
+  expect_s3_class(mdb$gene_set_source_member, "data.frame")
+  expect_gt(nrow(mdb$gene_set), 10000)
+  expect_gt(nrow(mdb$gene_set_details), 10000)
+  expect_gt(nrow(mdb$gene_set_source_member), 100000)
 })
