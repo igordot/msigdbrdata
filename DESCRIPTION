@@ -27,6 +27,7 @@ Imports:
     utils
 Suggests:
     DBI,
+    dbplyr,
     RCurl,
     rmarkdown,
     roxygen2,
