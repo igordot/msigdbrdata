@@ -28,7 +28,10 @@ ensembl_genes <- function(x) {
 
   # Check that the table seems reasonable
   if (max(ens$n_symbol_ids) > 100) {
-    stop("Some symbols have too many Ensembl IDs")
+    stop("Some gene symbols have too many Ensembl IDs")
+  }
+  if (max(ens$n_symbol_ids) < 10) {
+    stop("Some gene symbols should have many Ensembl IDs")
   }
   if (median(ens$n_symbol_ids) > 1) {
     stop("Most Ensembl IDs correspond to multiple gene symbols")
@@ -59,9 +62,17 @@ ensembl_genes <- function(x) {
   # Subset for the positional collection (compiled by MSigDB, so should be the most reliable)
   mgs_pos <- dplyr::filter(mgs, .data$collection %in% c("C1", "M1"))
 
-  # Nearly all genes should have positional information
-  if (n_distinct(mgs_pos$db_gene_symbol) / n_distinct(ens$db_gene_symbol) < 0.995) {
+  # Nearly all known Ensembl genes should have positional information
+  mgs_pos_symbols <- unique(mgs_pos$db_gene_symbol)
+  ens_symbols <- unique(ens$db_gene_symbol)
+  if (length(mgs_pos_symbols) / length(ens_symbols) < 0.98) {
     stop("Too few genes in the positional collection")
+  }
+  if (length(setdiff(mgs_pos_symbols, ens_symbols)) > 0) {
+    stop("Positional collection includes unknown Ensembl genes")
+  }
+  if (length(setdiff(ens_symbols, mgs_pos_symbols)) > 1000) {
+    stop("Too many Ensembl genes not present in the positional collection")
   }
 
   # Tier 1 mappings - gene symbols with only one ID in the original mapping file

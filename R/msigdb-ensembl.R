@@ -6,6 +6,8 @@
 #' * 2023.1 - 109 (February 2023)
 #' * 2023.2 - 110 (July 2023)
 #' * 2024.1 - 112 (May 2024)
+#' * 2025.1 - 114 (May 2025)
+#' * 2026.1 - 115 (September 2026)
 #'
 #' @param x A list of data frames returned by `msigdb_sqlite()`.
 #'
@@ -29,9 +31,10 @@ msigdb_ensembl <- function(x) {
   url_base <- "https://data.broadinstitute.org/gsea-msigdb/msigdb/annotations"
   if (x$MSigDB$target_species_code == "HS") {
     ens_url <- str_glue("{url_base}/human/Human_Ensembl_Gene_ID_MSigDB.v{version_name}.chip")
-  }
-  if (x$MSigDB$target_species_code == "MM") {
+  } else if (x$MSigDB$target_species_code == "MM") {
     ens_url <- str_glue("{url_base}/mouse/Mouse_Ensembl_Gene_ID_MSigDB.v{version_name}.chip")
+  } else {
+    stop("Unknown target species: ", x$MSigDB$target_species_code)
   }
 
   # Check that the URL is valid

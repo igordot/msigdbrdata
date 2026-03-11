@@ -55,9 +55,6 @@ gene_set_details <- function(x) {
     gs_url = "external_details_URL"
   )
 
-  # Removed archived gene sets (not relevant in 2024)
-  # mgs <- filter(mgs, gs_cat != "ARCHIVED")
-
   # Replace NA values with empty strings
   mgs <- tidyr::replace_na(
     mgs,
@@ -71,9 +68,9 @@ gene_set_details <- function(x) {
     )
   )
 
-  # Check that standard_name is always present
+  # Check that version_name is always present
   if (length(x$MSigDB$version_name) != 1) {
-    stop("msigdb does not have exactly one entry for the specified version")
+    stop("MSigDB does not have exactly one entry for the specified version")
   }
 
   # Add MSigDB database information
@@ -81,9 +78,9 @@ gene_set_details <- function(x) {
   mgs$db_target_species <- x$MSigDB$target_species_code
 
   # Clean up the final table
-  mgs <- distinct(mgs)
-  mgs <- arrange(mgs, .data$gs_name, .data$gs_id)
-  mgs <- as.data.frame(mgs, stringsAsFactors = FALSE)
+  mgs <- dplyr::distinct(mgs)
+  mgs <- dplyr::arrange(mgs, .data$gs_name, .data$gs_id)
+  mgs <- as.data.frame(mgs)
 
   # Check that the final table seems reasonable
   if (ncol(mgs) < 13) {

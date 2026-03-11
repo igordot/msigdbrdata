@@ -41,7 +41,7 @@ msigdbrdata <- function(target_species = c("HS", "MM")) {
   )
 
   # Confirm that the object is a data frame
-  mdb <- as.data.frame(mdb, stringsAsFactors = FALSE)
+  mdb <- as.data.frame(mdb)
 
   return(mdb)
 }

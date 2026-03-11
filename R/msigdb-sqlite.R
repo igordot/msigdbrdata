@@ -106,7 +106,7 @@ msigdb_sqlite <- function(x) {
     .data$NCBI_id
   )
 
-  # The namespace table allow us to identify the mapping info associated with each gene_symbol
+  # The namespace table provides the mapping info associated with each gene_symbol
   # Columns: id, label, species_code
   db_list$namespace <- tibble::as_tibble(dplyr::tbl(db, "namespace"))
 
